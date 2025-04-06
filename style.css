@@ -1,0 +1,273 @@
+@font-face {
+    font-family: 'Wedding';
+    src: url('Wedding in the Starlight.ttf');
+  }
+  
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #e8f5e9;
+    padding: 2rem;
+    color: #2e7d32;
+    max-width: 800px;
+    margin: auto;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  h1 {
+    font-family: 'Wedding', cursive;
+    text-align: center;
+    color: #1b5e20;
+    font-size: 10rem;
+    font-weight: bold;
+    margin: 0;  /* Remove any default margin */
+    line-height: 1;  /* Ensures it stays on one line */
+  }
+  
+  .header {
+    display: flex;
+    justify-content: center;  /* Center the content horizontally */
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    text-align: center;  /* Center text inside header */
+  }
+  
+  
+  .fancy {
+    --offset: 3px;
+    background: rgb(109, 204, 80);
+    border-radius: 50px;
+    position: relative;
+    height: 75px;
+    width: 400px;
+    max-width: 100%;
+    overflow: hidden;
+  }
+  
+  /* Conic gradient */
+  .fancy::before { 
+    content: '';
+    background: conic-gradient(transparent 270deg, white, transparent);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    aspect-ratio: 1;
+    width: 100%;
+    animation: rotate 2s linear infinite;
+  }
+  
+  /* Overlay */
+  .fancy::after {
+    content: '';
+    background: inherit;
+    border-radius: inherit;
+    position: absolute;
+    inset: var(--offset);
+    height: calc(100% - 2 * var(--offset));
+    width: calc(100% - 2 * var(--offset));
+  }
+  
+  .fancy input {
+    background: transparent;
+    color: white;
+    font-size: 1.5rem;
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    padding: 1.5rem;
+  }
+  
+  @keyframes rotate {
+    from {
+        transform: translate(-50%, -50%) scale(1.4) rotate(0turn);
+    }
+  
+    to {
+        transform: translate(-50%, -50%) scale(1.4) rotate(1turn);
+    }
+  }
+  
+  label {
+    display: block;
+    margin-top: 1.5rem;
+    font-weight: bold;
+  }
+  
+  textarea, select, input[type="range"], button {
+    width: 100%;
+    padding: 0.6rem;
+    margin-top: 0.4rem;
+    border: 1px solid #a5d6a7;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 1rem;
+  }
+  
+  select {
+    background-color: #f1f8e9;
+    cursor: pointer;
+  }
+  
+  .cuisine-wrapper {
+    position: relative;
+  }
+  
+  .custom-select {
+    position: relative;
+    width: 100%;
+  }
+  
+  .selected-option {
+    padding: 0.6rem;
+    background-color: #f1f8e9;
+    cursor: pointer;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .custom-select img {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    display: none;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+  }
+  
+  .options.show {
+    display: block;
+  }
+  
+  .option {
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .option:hover {
+    background-color: #f1f8e9;
+  }
+  
+  .option img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .button-group {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .button-group button {
+    flex: 1 1 48%;
+    background-color: #a5d6a7;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+  
+  .button-group button.active {
+    background-color: #66bb6a;
+    font-weight: bold;
+    color: white;
+  }
+  
+  .toggle-button {
+    background-color: #aed581;
+    cursor: pointer;
+    transition: 0.3s;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    display: inline-block;
+  }
+  
+  .toggle-button.active {
+    background-color: #66bb6a;
+    color: white;
+  }
+  
+  .toggle-button:hover {
+    background-color: #81c784;
+  }
+  
+  .slider-container {
+    margin-top: 0.5rem;
+  }
+  
+  .submit-btn {
+    margin-top: 2rem;
+    background-color: #43a047;
+    color: white;
+    font-weight: bold;
+    border: none;
+    padding: 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: 0.3s;
+  }
+  
+  .submit-btn:hover {
+    background-color: #2e7d32;
+  }
+  
+  .dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+  }
+  
+  .dark-mode select, .dark-mode textarea, .dark-mode input[type="range"], .dark-mode button {
+    background-color: #333;
+    color: white;
+    border: 1px solid #444;
+  }
+  
+  .dark-mode .custom-select {
+    background-color: #333;
+  }
+  
+  .dark-mode .selected-option {
+    background-color: #333;
+    color: white;
+  }
+  
+  .dark-mode .option {
+    background-color: #444;
+  }
+  
+  .dark-mode .option:hover {
+    background-color: #555;
+  }
+  
+  .dark-mode .submit-btn {
+    background-color: #66bb6a;
+  }
+  
+  .dark-mode .submit-btn:hover {
+    background-color: #81c784;
+  }
+  
+  .dark-mode-btn {
+    background-color: transparent;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    margin-top: 1rem;
+  }
+  

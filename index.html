@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Moody Foody</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="header">
+    <h1>Moody Foody</h1>
+    <button class="dark-mode-btn" onclick="toggleDarkMode()">🌙</button>
+  </div>
+
+  <form method="POST">
+    <!-- Mood -->
+    <label for="mood">Your Mood:</label>
+    <textarea id="mood" name="mood" required></textarea>
+
+    <!-- Preferred Cuisine -->
+    <div class="cuisine-wrapper">
+      <label for="cuisine">Preferred Cuisine (Optional):</label>
+      <div class="custom-select" id="cuisineDropdown">
+        <div class="selected-option" onclick="toggleDropdown()">Select a cuisine</div>
+        <div class="options" id="options">
+          <div class="option" data-value="USA"><img src="flags/usa.png" alt="USA Flag"><span>USA</span></div>
+          <div class="option" data-value="Italy"><img src="flags/italy.png" alt="Italy Flag"><span>Italy</span></div>
+          <div class="option" data-value="Japan"><img src="flags/japan.png" alt="Japan Flag"><span>Japan</span></div>
+          <div class="option" data-value="Mexico"><img src="flags/mexico.png" alt="Mexico Flag"><span>Mexico</span></div>
+          <div class="option" data-value="India"><img src="flags/india.png" alt="India Flag"><span>India</span></div>
+          <div class="option" data-value="China"><img src="flags/china.png" alt="China Flag"><span>China</span></div>
+          <div class="option" data-value="France"><img src="flags/france.png" alt="France Flag"><span>France</span></div>
+        </div>
+        <input type="hidden" name="cuisine" id="selectedCuisine">
+      </div>
+    </div>
+
+    <!-- Ingredients -->
+    <label for="ingredients">Ingredients Available (Optional):</label>
+    <textarea id="ingredients" name="ingredients"></textarea>
+
+    <!-- Dishes -->
+    <label for="dishes">Possible Dishes (Optional):</label>
+    <textarea id="dishes" name="dishes"></textarea>
+
+    <!-- Meal of the Day -->
+    <label>What Meal of the Day:</label>
+    <div class="button-group">
+      <button type="button" class="meal-btn">Breakfast</button>
+      <button type="button" class="meal-btn">Lunch</button>
+      <button type="button" class="meal-btn">Snack</button>
+      <button type="button" class="meal-btn">Dinner</button>
+      <button type="button" class="meal-btn">Dessert</button>
+    </div>
+    <input type="hidden" name="meal_of_the_day" id="meal_of_the_day_input">
+
+    <!-- Dietary Restrictions -->
+    <label for="dietaryRestrictions">Dietary Restrictions:</label>
+    <select id="dietaryRestrictions" name="dietaryRestrictions">
+      <option value="none">N/A</option>
+      <option value="veg">Vegetarian</option>
+      <option value="vegan">Vegan</option>
+      <option value="allergies">Allergies</option>
+      <option value="others">Others</option>
+    </select>
+    <textarea id="additionalRestrictions" name="additionalRestrictions" style="display:none;"></textarea>
+
+    <!-- Recipe Type -->
+    <label for="recipeType">Recipe Type:</label>
+    <div class="button-group">
+      <button type="button" class="toggle-button ai-btn" onclick="toggleRecipeType('ai')">AI Generated</button>
+      <button type="button" class="toggle-button chef-btn" onclick="toggleRecipeType('chef')">Chef's Recipe</button>
+    </div>
+    <input type="hidden" name="recipeType" id="recipe_type_input">
+
+    <!-- Cost -->
+    <label for="cost">Cost of Meal (Optional):</label>
+    <input type="range" id="cost" name="cost" min="1" max="100" value="50" oninput="updateSliderValue('cost', this.value)">
+    <span id="costValue">50</span>
+    <button type="button" class="toggle-cost" onclick="toggleCostSlider()">Turn Off Slider</button>
+
+    <!-- Number of People -->
+    <label for="numPeople">Number of People:</label>
+    <input type="range" id="numPeople" name="numPeople" min="1" max="10" value="4" oninput="updateSliderValue('numPeople', this.value)">
+    <span id="numPeopleValue">4</span>
+
+    <!-- Spice Level -->
+    <label for="spiceLevel">Spice Level (1-10):</label>
+    <input type="range" id="spiceLevel" name="spiceLevel" min="1" max="10" value="5" oninput="updateSliderValue('spiceLevel', this.value)">
+    <span id="spiceLevelValue">5</span>
+
+    <button type="submit" class="submit-btn">Get Food Recommendation</button>
+  </form>
+
+  <!-- Display result from Python -->
+  {% if result %}
+  <div class="result-box">
+    <h2>Your Recommendation:</h2>
+    <p>{{ result }}</p>
+  </div>
+  {% endif %}
+
+  <script>
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+    }
+
+    function toggleDropdown() {
+      document.getElementById("options").classList.toggle("show");
+    }
+
+    const options = document.querySelectorAll(".custom-select .option");
+    options.forEach(option => {
+      option.addEventListener("click", function () {
+        const selected = document.querySelector(".selected-option");
+        selected.innerHTML = this.innerHTML;
+        document.querySelector("#selectedCuisine").value = this.dataset.value;
+        document.getElementById("options").classList.remove("show");
+      });
+    });
+
+    window.addEventListener("click", function (e) {
+      if (!document.querySelector(".custom-select").contains(e.target)) {
+        document.getElementById("options").classList.remove("show");
+      }
+    });
+
+    document.querySelector('#dietaryRestrictions').addEventListener('change', function() {
+      const additionalRestrictions = document.querySelector('#additionalRestrictions');
+      additionalRestrictions.style.display = (this.value === 'allergies' || this.value === 'others') ? 'block' : 'none';
+    });
+
+    const mealButtons = document.querySelectorAll(".meal-btn");
+    mealButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        mealButtons.forEach(b => b.classList.remove("active"));
+        button.classList.add("active");
+        document.getElementById("meal_of_the_day_input").value = button.textContent;
+      });
+    });
+
+    function toggleRecipeType(type) {
+      const aiButton = document.querySelector('.ai-btn');
+      const chefButton = document.querySelector('.chef-btn');
+      const recipeInput = document.querySelector('#recipe_type_input');
+      if (type === 'ai') {
+        aiButton.classList.add("active");
+        chefButton.classList.remove("active");
+        recipeInput.value = "AI";
+      } else {
+        chefButton.classList.add("active");
+        aiButton.classList.remove("active");
+        recipeInput.value = "Chef";
+      }
+    }
+
+    function toggleCostSlider() {
+      const costSlider = document.querySelector("#cost");
+      costSlider.disabled = !costSlider.disabled;
+    }
+
+    function updateSliderValue(sliderId, value) {
+      document.getElementById(sliderId + 'Value').textContent = value;
+    }
+  </script>
+</body>
+</html>
